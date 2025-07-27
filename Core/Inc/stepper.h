@@ -1,7 +1,8 @@
 #ifndef _STEPPER_H_
 #define _STEPPER_H_
 
-void stepper_init(void);               // 步进电机初始化
-void stepper_move(int steps, int num); // 步进电机移动函数
+void stepper_init(void);                     // 步进电机初始化
+void stepper_move_step(int steps, int num);  // 步进电机移动函数
+void stepper_move_speed(int num, int speed); // 步进电机速度设置函数
 
 #endif

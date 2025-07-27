@@ -1,9 +1,13 @@
 {
     "folders": [
         {
-            "path": ".."
+            "path": "."
         }
     ],
-    "settings": {},
+    "settings": {
+        "files.associations": {
+            "stepper.h": "c"
+        }
+    },
     "extensions": {}
 }

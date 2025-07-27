@@ -18,7 +18,7 @@ void stepper_init(void) // 步进电机初始化
     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_2, GPIO_PIN_RESET); // step1
 }
 
-void stepper_move(int num, int speed) // 步进电机移动函数,num=1_pitch,speed<0抬头,num=2_yaw,
+void stepper_move_speed(int num, int speed) // 步进电机移动函数,num=1_pitch,speed<0抬头,num=2_yaw,
 {
     switch (num) // 根据num选择步进电机
     {
@@ -56,7 +56,7 @@ void stepper_move(int num, int speed) // 步进电机移动函数,num=1_pitch,sp
     }
 }
 
-// void stepper_move(int num, int steps, int speed) // 步进电机移动函数
+// void stepper_move_step(int num, int steps, int speed) // 步进电机移动函数
 // {
 //     switch (num) // 根据num选择步进电机
 //     {
