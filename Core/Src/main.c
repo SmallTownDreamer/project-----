@@ -201,8 +201,7 @@ int main(void)
   // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_3, GPIO_PIN_SET); // en2
   // // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
   // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET); // en1
-  stepper_init();             // 步进电机初始化
-  stepper_move_speed(1, -85); // 抬头
+  stepper_init(); // 步进电机初始化
   // stepper_move(-12800, 1);
 
   // 陀螺仪接收中断

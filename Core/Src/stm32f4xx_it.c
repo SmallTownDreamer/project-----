@@ -87,9 +87,12 @@ uint8_t state1, state2;
 uint8_t turn1, turn2;
 
 // 步进电机状态
-extern int stepper1_step;  // 步进电机步数
+extern int stepper1_step;  // 步进电机1步数_外部
+extern int stepper2_step;  // 步进电机2步数_外部
 extern int stepper1_speed; // 步进电机1速度
 extern int stepper2_speed; // 步进电机2速度
+int stepper1_st = 0;       // 步进电机1步数_内部
+int stepper2_st = 1;       // 步进电机2步数_内部
 
 /* USER CODE END EV */
 
@@ -405,17 +408,23 @@ void TIM5_IRQHandler(void)
   if (cnt <= ABS(stepper1_speed))
   {
     HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
-    stepper1_step++;
-    if (stepper1_step >= 6400 * 1.55)
+
+    // 步进电机步数限位
+    if (stepper1_step < 0)
+    {
+      stepper1_st--;
+    }
+    stepper1_st = (stepper1_step > 0) ? stepper1_st++ : (stepper1_step < 0) ? stepper1_st--
+                                                                            : stepper1_st; // 步进电机1步数限位
+    if (stepper1_st >= 12700 || stepper1_st <= 0)
     {
       stepper1_speed = 0; // 重置步进电机1速度
-      stepper1_step = 0;  // 重置步进电机1步数
     }
-  }
 
-  if (cnt >= 100)
-  {
-    cnt = 0;
+    if (cnt >= 100)
+    {
+      cnt = 0;
+    }
   }
 
   // if (cnt <= m2 * 2)
