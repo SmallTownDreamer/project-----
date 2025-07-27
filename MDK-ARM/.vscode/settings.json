@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "control.h": "c",
+        "track.h": "c",
+        "table.h": "c",
+        "numeric": "c",
+        "functional": "c",
+        "jy901s.h": "c"
+    }
+}
