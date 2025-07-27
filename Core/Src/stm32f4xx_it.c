@@ -91,8 +91,8 @@ extern int stepper1_step;  // 步进电机1步数_外部
 extern int stepper2_step;  // 步进电机2步数_外部
 extern int stepper1_speed; // 步进电机1速度
 extern int stepper2_speed; // 步进电机2速度
-int stepper1_st = 0;       // 步进电机1步数_内部
-int stepper2_st = 1;       // 步进电机2步数_内部
+int stepper1_st = 10048;   // 步进电机1步数_内部 初始步数5024 * 2 = 10048
+int stepper2_st = 0;       // 步进电机2步数_内部
 
 /* USER CODE END EV */
 
@@ -325,16 +325,16 @@ void USART1_IRQHandler(void)
   switch (recieve_buf[0])
   {
   case 0x01:
-    Velocity_Kp = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    stepper1_step = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x02:
-    Velocity_Ki = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    stepper2_step = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x03:
-    angle_Kp = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    stepper1_speed = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x04:
-    angle_Kd = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    stepper2_speed = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x05:
     target_V = (int)bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
@@ -410,21 +410,17 @@ void TIM5_IRQHandler(void)
     HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
 
     // 步进电机步数限位
-    if (stepper1_step < 0)
-    {
-      stepper1_st--;
-    }
-    stepper1_st = (stepper1_step > 0) ? stepper1_st++ : (stepper1_step < 0) ? stepper1_st--
-                                                                            : stepper1_st; // 步进电机1步数限位
+    stepper1_st = (stepper1_step > 0 || stepper1_speed > 0) ? stepper1_st++ : (stepper1_step < 0 || stepper2_speed < 0) ? stepper1_st--
+                                                                                                                        : stepper1_st; // 步进电机1步数限位
     if (stepper1_st >= 12700 || stepper1_st <= 0)
     {
       stepper1_speed = 0; // 重置步进电机1速度
     }
+  }
 
-    if (cnt >= 100)
-    {
-      cnt = 0;
-    }
+  if (cnt >= 100)
+  {
+    cnt = 0;
   }
 
   // if (cnt <= m2 * 2)

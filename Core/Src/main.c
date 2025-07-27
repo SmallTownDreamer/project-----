@@ -182,9 +182,9 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
-  OLED_Init();
-  OLED_Clear();
-  OLED_ShowString(0, 0, "oled ready", 16);
+  // OLED_Init();
+  // OLED_Clear();
+  // OLED_ShowString(0, 0, "oled ready", 16);
 
   // 电机初始化
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
@@ -194,18 +194,15 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
   motor(0, 0);
-  OLED_ShowString(0, 0, "motor aready", 16);
+  // OLED_ShowString(0, 0, "motor aready", 16);
 
   // // 步进电机初始化
-  // //  HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4, GPIO_PIN_SET); // dir2
-  // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_3, GPIO_PIN_SET); // en2
-  // // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
-  // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET); // en1
   stepper_init(); // 步进电机初始化
-  // stepper_move(-12800, 1);
+  stepper_move_speed(1, 90);
+  // stepper_move_step(1, 4960);
 
   // 陀螺仪接收中断
-  HAL_UART_Receive_IT(&huart2, &Rxdata, 1);
+  // HAL_UART_Receive_IT(&huart2, &Rxdata, 1);
 
   // 开启定时器中断
   HAL_TIM_Base_Start_IT(&htim5);

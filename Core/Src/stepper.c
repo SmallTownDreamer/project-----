@@ -13,7 +13,7 @@ void stepper_init(void) // 步进电机初始化
     //  HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4, GPIO_PIN_SET); // dir2
     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_3, GPIO_PIN_RESET); // en2
     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_5, GPIO_PIN_RESET); // step2
-    stepper_move_step(1, -4960);                          // 步进电机1抬头初始化
+    stepper_move_step(1, 3200 * 1.57);                    // 步进电机1抬头初始化
     // HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_RESET); // en1
     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_2, GPIO_PIN_RESET); // step1
@@ -27,11 +27,11 @@ void stepper_move_spst(int num, int speed, int steps) // 步进电机移动函�
         HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET); // en1
         if (steps > 0)                                      // 顺时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET); // dir1
         }
         else // 逆时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET); // dir1
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
         }
         stepper1_speed = speed;
         stepper1_speed = (stepper1_speed > 99) ? 99 : (stepper1_speed < -99) ? -99
@@ -57,7 +57,7 @@ void stepper_move_spst(int num, int speed, int steps) // 步进电机移动函�
     }
 }
 
-void stepper_move_speed(int num, int speed) // 步进电机移动函数,num=1_pitch,speed<0抬头,num=2_yaw,
+void stepper_move_speed(int num, int speed) // 步进电机移动函数,num=1_pitch,speed>0抬头,num=2_yaw,
 {
     switch (num) // 根据num选择步进电机
     {
@@ -65,11 +65,11 @@ void stepper_move_speed(int num, int speed) // 步进电机移动函数,num=1_pi
         HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET); // en1
         if (speed > 0)                                      // 顺时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET); // dir1
         }
         else // 逆时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET); // dir1
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
         }
         stepper1_speed = speed;
         stepper1_speed = (stepper1_speed > 99) ? 99 : (stepper1_speed < -99) ? -99
@@ -95,7 +95,7 @@ void stepper_move_speed(int num, int speed) // 步进电机移动函数,num=1_pi
     }
 }
 
-void stepper_move_step(int num, int steps) // 步进电机移动函数,num=1_pitch,step<0抬头,num=2_yaw,
+void stepper_move_step(int num, int steps) // 步进电机移动函数,num=1_pitch,step>0抬头,num=2_yaw,
 {
     int stepper_step = 0; // 步进电机步数
     switch (num)          // 根据num选择步进电机
@@ -104,11 +104,11 @@ void stepper_move_step(int num, int steps) // 步进电机移动函数,num=1_pit
         HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET); // en1
         if (steps > 0)                                      // 顺时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET); // dir1
         }
         else // 逆时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET); // dir1
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
         }
         stepper_step = steps;
         break;
