@@ -7,7 +7,7 @@ project\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 project\control.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 project\control.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 project\control.o: ../Drivers/CMSIS/Include/core_cm4.h
-project\control.o: D:\keil5\32\ARM\ARMCC\Bin\..\include\stdint.h
+project\control.o: E:\Dan Pian Ji\Keil 5\ARM\ARMCC\Bin\..\include\stdint.h
 project\control.o: ../Drivers/CMSIS/Include/cmsis_version.h
 project\control.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 project\control.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -15,7 +15,7 @@ project\control.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 project\control.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 project\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 project\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-project\control.o: D:\keil5\32\ARM\ARMCC\Bin\..\include\stddef.h
+project\control.o: E:\Dan Pian Ji\Keil 5\ARM\ARMCC\Bin\..\include\stddef.h
 project\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 project\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 project\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -39,5 +39,5 @@ project\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 project\control.o: ../Core/Inc/main.h
 project\control.o: ../Core/Inc/oled.h
 project\control.o: ../Core/Inc/jy901s.h
-project\control.o: D:\keil5\32\ARM\ARMCC\Bin\..\include\stdio.h
-project\control.o: D:\keil5\32\ARM\ARMCC\Bin\..\include\string.h
+project\control.o: E:\Dan Pian Ji\Keil 5\ARM\ARMCC\Bin\..\include\stdio.h
+project\control.o: E:\Dan Pian Ji\Keil 5\ARM\ARMCC\Bin\..\include\string.h
