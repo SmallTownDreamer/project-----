@@ -133,7 +133,7 @@ void stepper_move_step(int num, int steps) // 步进电机移动函数,num=1_pit
     {
         HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
         // HAL_Delay(1);                          // 延时以控制步进速度
-        uint32_t Delay = 30 * 168 / 4;
+        uint32_t Delay = 50 * 168 / 4;
         do
         {
             __NOP();
