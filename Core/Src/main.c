@@ -110,8 +110,10 @@ extern struct SAngle stcAngle;
 extern uint8_t Rxdata;
 
 // 步进电机
-extern int stepper1_st; // 步进电机1步数_内部
-extern int stepper2_st; // 步进电机2步数_内部
+extern int stepper1_st;  // 步进电机1步数_内部
+extern int stepper2_st;  // 步进电机2步数_内部
+extern int stepper1_0st; // 步进电机1初始步数
+extern int stepper2_0st; // 步进电机2初始步数
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -205,8 +207,10 @@ int main(void)
   // // 步进电机初始化
 
   stepper_init(); // 步进电机初始化
+  stepper_move_speed(1, -10);
+  stepper_move_speed(2, -10);
   // stepper_move_step(1, -5024);
-  stepper_move_speed(1, 10);
+  // stepper_move_speed(1, 10);
   // __HAL_TIM_SET_AUTORELOAD(&htim5, 350);
   // stepper_move_step(2, 4960);
 
@@ -247,7 +251,24 @@ int main(void)
     // OLED_ShowString(0, 0, temp_ZFC, 16);
 
     // 步进电机调参
-    OLED_ShowNum(0, 2, stepper2_st, 5, 16);
+    OLED_ShowNum(0, 2, stepper2_0st, 5, 16);
+
+    if (stepper1_0st >= 200)
+    {
+      stepper_move_speed(1, -100);
+    }
+    else if (stepper1_0st <= -200)
+    {
+      stepper_move_speed(1, 100);
+    }
+    if (stepper2_0st >= 800)
+    {
+      stepper_move_speed(2, -100);
+    }
+    else if (stepper2_0st <= -200)
+    {
+      stepper_move_speed(2, 100);
+    }
 
     // 角度环调参
     int temp;
