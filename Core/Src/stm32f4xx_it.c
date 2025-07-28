@@ -403,80 +403,47 @@ void TIM5_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
 
-  cnt++;
-
-  if (cnt <= ABS(stepper1_speed))
+  if (stepper1_speed != 0)
   {
-    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
-
-    // 步进电机步数限位
-    if (stepper1_step > 0 || stepper1_speed > 0)
-    {
-      stepper1_st++; // 步进电机1步数增加
-    }
-    else if (stepper1_step < 0 || stepper1_speed < 0)
-    {
-      stepper1_st--; // 步进电机1步数减少
-    }
-    // if (stepper1_st >= 12700 || stepper1_st <= 0)
-    // {
-    //   stepper1_speed = 0; // 重置步进电机1速度
-    // }
-    stepper1_speed = (stepper1_st >= 12700 || stepper1_st <= 0) ? 0
-                                                                : stepper1_speed; // 重置步进电机1速度
+    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
   }
 
-  if (cnt >= 100)
+  if (stepper2_speed != 0)
   {
-    cnt = 0;
+    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_5);
   }
 
-  // if (cnt <= m2 * 2)
+  // if (cnt <= ABS(stepper1_speed))
   // {
-  //   if (state2 == 1)
+  //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
+
+  //   // 步进电机步数限位
+  //   if (stepper1_step > 0 || stepper1_speed > 0)
   //   {
-  //     state2 = 0;
-  //     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_5, GPIO_PIN_SET);
-  //     cnt2++;
+  //     stepper1_st++; // 步进电机1步数增加
   //   }
-  //   if (state2 == 0)
+  //   else if (stepper1_step < 0 || stepper1_speed < 0)
   //   {
-  //     state2 = 1;
-  //     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_5, GPIO_PIN_RESET);
+  //     stepper1_st--; // 步进电机1步数减少
   //   }
+  //   stepper1_speed = (stepper1_st >= 12500 || stepper1_st <= 150) ? 0
+  //                                                                 : stepper1_speed; // 重置步进电机1速度
   // }
-  // if (cnt <= m1 * 2)
+
+  // if (cnt <= ABS(stepper2_speed))
   // {
-  //   if (state1 == 1)
+  //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_5); // 控制步进电机步进
+
+  //   if (stepper2_step > 0 || stepper2_speed > 0)
   //   {
-  //     state1 = 0;
-  //     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_2, GPIO_PIN_SET);
-  //     cnt1++;
+  //     stepper2_st++; // 步进电机2步数增加
   //   }
-  //   if (state1 == 0)
+  //   else if (stepper2_step < 0 || stepper2_speed < 0)
   //   {
-  //     state1 = 1;
-  //     HAL_GPIO_WritePin(GPIOG, GPIO_PIN_2, GPIO_PIN_RESET);
+  //     stepper2_st--; // 步进电机2步数减少
   //   }
   // }
 
-  // if(cnt==101){cnt=1;}
-  // if (turn1 == 0)
-  // {
-  //   HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET);
-  // }
-  // else
-  // {
-  //   HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET);
-  // }
-  // if (turn2 == 0)
-  // {
-  //   HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4, GPIO_PIN_SET);
-  // }
-  // else
-  // {
-  //   HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4, GPIO_PIN_RESET);
-  // }
   /* USER CODE END TIM5_IRQn 1 */
 
   /* USER CODE END TIM5_IRQn 1 */

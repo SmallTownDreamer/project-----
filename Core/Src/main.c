@@ -111,6 +111,7 @@ extern uint8_t Rxdata;
 
 // 步进电机
 extern int stepper1_st; // 步进电机1步数_内部
+extern int stepper2_st; // 步进电机2步数_内部
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -198,16 +199,20 @@ int main(void)
   motor(0, 0);
   // OLED_ShowString(0, 0, "motor aready", 16);
 
+  // 开启定时器中断
+  HAL_TIM_Base_Start_IT(&htim5);
+
   // // 步进电机初始化
+
   stepper_init(); // 步进电机初始化
-  stepper_move_speed(1, -95);
-  // stepper_move_step(1, 4960);
+  // stepper_move_step(1, -5024);
+  // stepper_move_speed(2, 10);
+  // __HAL_TIM_SET_AUTORELOAD(&htim5, 350);
+  // stepper_move_step(2, 4960);
 
   // 陀螺仪接收中断
   // HAL_UART_Receive_IT(&huart2, &Rxdata, 1);
 
-  // 开启定时器中断
-  HAL_TIM_Base_Start_IT(&htim5);
   // // 蓝牙接收中断
   // HAL_UART_Transmit(&huart1, transmit_buf, TRANSMIT_SIZE, 1000);
 
@@ -242,7 +247,7 @@ int main(void)
     // OLED_ShowString(0, 0, temp_ZFC, 16);
 
     // 步进电机调参
-    OLED_ShowNum(0, 2, stepper1_st, 5, 16);
+    OLED_ShowNum(0, 2, stepper2_st, 5, 16);
 
     // 角度环调参
     int temp;
