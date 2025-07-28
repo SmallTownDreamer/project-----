@@ -417,17 +417,21 @@ void TIM5_IRQHandler(void)
   // {
   //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
 
-  //   // 步进电机步数限位
-  //   if (stepper1_step > 0 || stepper1_speed > 0)
-  //   {
-  //     stepper1_st++; // 步进电机1步数增加
-  //   }
-  //   else if (stepper1_step < 0 || stepper1_speed < 0)
-  //   {
-  //     stepper1_st--; // 步进电机1步数减少
-  //   }
-  //   stepper1_speed = (stepper1_st >= 12500 || stepper1_st <= 150) ? 0
-  //                                                                 : stepper1_speed; // 重置步进电机1速度
+  // 步进电机步数限位
+  if (stepper1_step > 0 || stepper1_speed > 0)
+  {
+    stepper1_st++; // 步进电机1步数增加
+  }
+  else if (stepper1_step < 0 || stepper1_speed < 0)
+  {
+    stepper1_st--; // 步进电机1步数减少
+  }
+  stepper1_speed = (stepper1_st >= 12500 || stepper1_st <= 150) ? 0
+                                                                : stepper1_speed; // 重置步进电机1速度
+  if (stepper1_speed == 0)
+  {
+    HAL_GPIO_WritePin(GPIOG, GPIO_PIN_2, GPIO_PIN_RESET); // 步进电机1停止时关闭步进引脚
+  }
   // }
 
   // if (cnt <= ABS(stepper2_speed))

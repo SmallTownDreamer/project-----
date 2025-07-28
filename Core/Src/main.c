@@ -206,7 +206,7 @@ int main(void)
 
   stepper_init(); // 步进电机初始化
   // stepper_move_step(1, -5024);
-  // stepper_move_speed(2, 10);
+  stepper_move_speed(1, 10);
   // __HAL_TIM_SET_AUTORELOAD(&htim5, 350);
   // stepper_move_step(2, 4960);
 
