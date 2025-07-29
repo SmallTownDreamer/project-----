@@ -269,9 +269,7 @@ int main(void)
     //   stepper_move_speed(1, 20);
     // }
     // stepper_move_speed(1, 10);
-    // float temp1 = sin(stepper2_0st / 100 * 3.14);
-    // int temp2 = round(temp1);
-    float temp1 = stepper2_0st;
+    float temp1 = sin(stepper2_0st / 100 * 3.14);
     int temp2 = round(temp1);
     stepper_move_speed(1, temp2);
 
