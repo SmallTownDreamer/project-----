@@ -24,6 +24,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include <math.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -207,8 +208,8 @@ int main(void)
   // // 步进电机初始化
 
   stepper_init(); // 步进电机初始化
-  stepper_move_speed(1, -10);
-  stepper_move_speed(2, -10);
+  // stepper_move_speed(2, -20);
+  // stepper_move_speed(1, -10);
   // stepper_move_step(1, -5024);
   // stepper_move_speed(1, 10);
   // __HAL_TIM_SET_AUTORELOAD(&htim5, 350);
@@ -251,24 +252,32 @@ int main(void)
     // OLED_ShowString(0, 0, temp_ZFC, 16);
 
     // 步进电机调参
-    OLED_ShowNum(0, 2, stepper2_0st, 5, 16);
+    if (stepper2_0st >= 400)
+    {
+      stepper_move_speed(2, -20);
+    }
+    else if (stepper2_0st <= -400)
+    {
+      stepper_move_speed(2, 20);
+    }
+    // if (stepper1_0st >= 200)
+    // {
+    //   stepper_move_speed(1, -20);
+    // }
+    // else if (stepper1_0st <= -200)
+    // {
+    //   stepper_move_speed(1, 20);
+    // }
+    // stepper_move_speed(1, 10);
+    // float temp1 = sin(stepper2_0st / 100 * 3.14);
+    // int temp2 = round(temp1);
+    float temp1 = stepper2_0st;
+    int temp2 = round(temp1);
+    stepper_move_speed(1, temp2);
 
-    if (stepper1_0st >= 200)
-    {
-      stepper_move_speed(1, -100);
-    }
-    else if (stepper1_0st <= -200)
-    {
-      stepper_move_speed(1, 100);
-    }
-    if (stepper2_0st >= 800)
-    {
-      stepper_move_speed(2, -100);
-    }
-    else if (stepper2_0st <= -200)
-    {
-      stepper_move_speed(2, 100);
-    }
+    OLED_ShowNum(0, 4, stepper2_0st, 5, 16);
+    OLED_ShowNum(0, 6, 1, 5, 16);
+    OLED_ShowNum(0, 6, 0, 5, 16);
 
     // 角度环调参
     int temp;
