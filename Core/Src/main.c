@@ -111,10 +111,9 @@ extern struct SAngle stcAngle;
 extern uint8_t Rxdata;
 
 // 步进电机
-extern int stepper1_st;  // 步进电机1步数_内部
-extern int stepper2_st;  // 步进电机2步数_内部
 extern int stepper1_0st; // 步进电机1初始步数
 extern int stepper2_0st; // 步进电机2初始步数
+uint8_t test_if=0;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -209,9 +208,9 @@ int main(void)
 
   stepper_init(); // 步进电机初始化
   // stepper_move_speed(2, -20);
-  // stepper_move_speed(1, -10);
-  // stepper_move_step(1, -5024);
   // stepper_move_speed(1, 10);
+  // stepper_move_step(1, -5024);
+  // stepper_move_speed(1, -10);
   // __HAL_TIM_SET_AUTORELOAD(&htim5, 350);
   // stepper_move_step(2, 4960);
 
@@ -268,20 +267,20 @@ int main(void)
     // {
     //   stepper_move_speed(1, 20);
     // }
-    // stepper_move_speed(1, 10);
-    float temp1 = sin(stepper2_0st / 100 * 3.14);
+    // stepper_move_speed(1, -20);
+    float temp1 = 1.5 * 1000* sin(stepper2_0st / 100 * 3.14);
     int temp2 = round(temp1);
-    stepper_move_speed(1, temp2);
-
-    OLED_ShowNum(0, 4, stepper2_0st, 5, 16);
-    OLED_ShowNum(0, 6, 1, 5, 16);
-    OLED_ShowNum(0, 6, 0, 5, 16);
+    stepper_move_speed(1,temp2);
+    printf("%d,%d,%d,%f,%d\n", stepper1_0st, stepper2_0st, test_if, temp1,temp2);
+    // OLED_ShowNum(0, 4, stepper2_0st, 5, 16);
+    // OLED_ShowNum(0, 6, 1, 5, 16);
+    // OLED_ShowNum(0, 6, 0, 5, 16);
 
     // 角度环调参
-    int temp;
-    temp = Angle_PID(target_turn, Yaw_z, Gz);
-    printf("%d,%d,%d,%f,%f,%f,%f,%f,%d\n", 1, 1, 1, 1.0, 1.0, 1.0, target_turn, Yaw_z, temp);
-    motor_motion(-temp, temp);
+    // int temp;
+    // temp = Angle_PID(target_turn, Yaw_z, Gz);
+    // printf("%d,%d,%d,%f,%f,%f,%f,%f,%d\n", 1, 1, 1, 1.0, 1.0, 1.0, target_turn, Yaw_z, temp);
+    // motor_motion(-temp, temp);
   }
   /* USER CODE END 3 */
 }

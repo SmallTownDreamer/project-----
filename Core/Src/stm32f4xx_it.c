@@ -91,8 +91,6 @@ extern int stepper1_step;  // 步进电机1步数_外部
 extern int stepper2_step;  // 步进电机2步数_外部
 extern int stepper1_speed; // 步进电机1速度
 extern int stepper2_speed; // 步进电机2速度
-int stepper1_st = 10048;   // 步进电机1步数_内部 初始步数5024 * 2 = 10048
-int stepper2_st = 0;       // 步进电机2步数_内部
 extern int stepper1_0st;   // 步进电机1初始步数
 extern int stepper2_0st;   // 步进电机2初始步数
 
@@ -397,6 +395,7 @@ void USART3_IRQHandler(void)
 /**
  * @brief This function handles TIM5 global interrupt.
  */
+extern uint8_t test_if; // 测试变量
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
@@ -404,44 +403,43 @@ void TIM5_IRQHandler(void)
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
-
+  test_if++;
   if (stepper1_speed != 0)
   {
     HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
+
+    if (stepper1_step > 0 || stepper1_speed > 0)
+    {
+      stepper1_0st++; // 步进电机1初始步数增加
+    }
+    else if (stepper1_step < 0 || stepper1_speed < 0)
+    {
+      stepper1_0st--; // 步进电机1初始步数减少
+    }
   }
 
   if (stepper2_speed != 0)
   {
     HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_5);
+
+    // 步进电机2计数
+    if (stepper2_step > 0 || stepper2_speed > 0)
+    {
+      stepper2_0st++; // 步进电机2初始步数增加
+    }
+    else if (stepper2_step < 0 || stepper2_speed < 0)
+    {
+      stepper2_0st--; // 步进电机2初始步数减少
+    }
   }
 
   // if (cnt <= ABS(stepper1_speed))
   // {
   //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
 
-  // 步进电机步数限位并计数
-  if (stepper1_step > 0 || stepper1_speed > 0)
-  {
-    stepper1_st++;  // 步进电机1步数增加
-    stepper1_0st++; // 步进电机1初始步数增加
-  }
-  else if (stepper1_step < 0 || stepper1_speed < 0)
-  {
-    stepper1_st--;  // 步进电机1步数减少
-    stepper1_0st--; // 步进电机1初始步数减少
-  }
-  stepper1_speed = (stepper1_st >= 12500 || stepper1_st <= 150) ? 0
-                                                                : stepper1_speed; // 重置步进电机1速度
-
-  // 步进电机2计数
-  if (stepper2_step > 0 || stepper2_speed > 0)
-  {
-    stepper2_0st++; // 步进电机2初始步数增加
-  }
-  else if (stepper2_step < 0 || stepper2_speed < 0)
-  {
-    stepper2_0st--; // 步进电机2初始步数减少
-  }
+  // 步进电机步数限位
+  stepper1_speed = (stepper1_0st >= 1620 || stepper1_0st <= -10730) ? 0
+                                                                    : stepper1_speed; // 重置步进电机1速度
 
   // if (cnt <= ABS(stepper2_speed))
   // {

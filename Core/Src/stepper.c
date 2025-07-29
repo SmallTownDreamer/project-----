@@ -30,16 +30,14 @@ void stepper_move_speed(int num, int speed) // 步进电机移动函数,num=1_pi
 {
     switch (num) // 根据num选择步进电机
     {
-    case 1: // 步进电机1
-
-        if (speed > 0) // 顺时针
+    case 1:                                                 // 步进电机1
+        HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET); // en1
+        if (speed > 0)                                      // 顺时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET);   // en1
             HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_RESET); // dir1
         }
         else // 逆时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0, GPIO_PIN_SET); // en1
             HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
         }
         __HAL_TIM_SET_AUTORELOAD(&htim5, 350 - ABS(speed)); // 设置步进电机定时器自动重装载值
