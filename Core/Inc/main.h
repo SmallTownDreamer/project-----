@@ -37,57 +37,17 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 
-//蓝牙收数据大小
-#define RECIEVE_SIZE 8
-//蓝牙接收数组
-extern uint8_t recieve_buf[RECIEVE_SIZE];
+// 蓝牙接收数组
+extern uint8_t recieve_buf[5];
+// 蓝牙发送数组
+extern uint8_t transmit_buf[20];
+//视觉接收数组
+extern uint8_t RxCamera_buf[16];
+//视觉发送数组
+extern uint8_t TxCamera_buf[6];
 
-//蓝牙发数据大小记得在原数据基础上加三
-#define TRANSMIT_SIZE 10
-//蓝牙发送数组
-extern uint8_t transmit_buf[TRANSMIT_SIZE];
-
-//临时字符串
+// 临时字符串
 extern uint8_t temp_ZFC[20];
-
-//模式选择
-extern uint8_t menu;
-//角加速度
-extern float Ax,Ay,Az;
-//角速度
-extern float Gx,Gy,Gz;
-//磁场
-extern short Hx,Hy,Hz;
-//角度（自动解算）
-extern float Roll_x,Pitch_y,Yaw_z;
-
-//电机测速
-extern signed int Encoder_Left,Encoder_Right;
-
-//转向状态量(0off,1start,2continue)
-extern uint8_t turn_state;
-
-//蓝牙测试状态量
-extern uint8_t bt_state;
-
-//送药小车状态
-extern uint8_t car_state;
-// 目标数字和识别数字
-extern uint8_t target_num, now_num[4],store_num2[2],store_num31[2],store_num32[2];
-// 临时状态
-extern uint8_t temp_state ;
-
-//速度环
-extern float Velocity_Ki, Velocity_Kp, Velocity_Kd;
-//角度环
-extern float angle_Kp,angle_Kd;
-
-//目标速度
-extern int target_V;
-//目标角度
-extern float target_turn;
-//积分项
-extern int err_sum[2] ;
 
 /* USER CODE END ET */
 

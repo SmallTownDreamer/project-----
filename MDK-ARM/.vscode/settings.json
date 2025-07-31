@@ -6,6 +6,7 @@
         "table.h": "c",
         "numeric": "c",
         "functional": "c",
-        "jy901s.h": "c"
+        "jy901s.h": "c",
+        "oled.h": "c"
     }
 }
