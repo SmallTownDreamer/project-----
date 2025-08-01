@@ -34,6 +34,7 @@
 #include "table.h"
 #include "stepper.h"
 #include "math.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +60,25 @@ uint8_t temp_ZFC[20];
 extern int steppery_st; // 步进电机1初始步数
 extern int stepperx_st; // 步进电机2初始步数
 uint8_t test_if1=0,test_if2=0;
+
+//视觉收发相关
+uint8_t uart_rx_byte;           // 单字节接收缓冲
+uint8_t rx_index = 0;    // 接收索引
+uint8_t packet_ready = 0; // 数据包准备标志
+// 视觉接收数组
+uint8_t carecieve_buf[16],rxprocess_buf[20];
+//视觉最终数组
+int16_t camera_use[10];
+
+//陀螺仪接收参数
+extern uint8_t Rxdata;
+extern int m1, m2;
+// 角度（自动解算）
+float Roll_x, Pitch_y, Yaw_z;
+// 角加速度
+float Ax, Ay, Az;
+// 角速度
+float Gx, Gy, Gz;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -83,7 +103,7 @@ void SystemClock_Config(void);
 int16_t tick;
 
 /* USER CODE END 0 */
-extern int m1, m2;
+
 /**
   * @brief  The application entry point.
   * @retval int
@@ -134,49 +154,68 @@ int main(void)
   MX_TIM7_Init();
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
-  OLED_Init();
-  OLED_Clear();
-  OLED_ShowString(0, 0, "oled ready", 16);
+  // OLED_Init();
+  // OLED_Clear();
+  // OLED_ShowString(0, 0, "oled ready", 16);
 
+
+  //陀螺仪接收中断
+  HAL_UART_Receive_IT(&huart3,&Rxdata,1);
+  //下面while（1）里有一个测试的蓝牙发送代码取注释掉看看串口，（如果是好的）把while（1）上面的那个代码取注释掉看看定义试试
 
   // 开启步进电机定时器中断
-  HAL_TIM_Base_Start_IT(&htim5);
   HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start_IT(&htim7);
 
-  // // 步进电机初始化
-  // stepper_init(); // 步进电机初始化
+  // 步进电机初始化
+  stepper_init(); // 步进电机初始化
 
   //蓝牙调参
   HAL_UART_Receive_IT(&huart1,recieve_buf,5);
+
+  // 视觉接收中断
+  HAL_UART_Receive_IT(&huart4, &uart_rx_byte, 1);
+
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint32_t last_time = HAL_GetTick();
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-
+    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_7,GPIO_PIN_SET);
+    HAL_Delay(1000);
+    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_7,GPIO_PIN_RESET);
+    HAL_Delay(1000);
+    //陀螺仪调试
+    // sprintf((char *)temp_ZFC, "angle:%d   ", stcAngle.Angle[0]*180/32768 );
+    // OLED_ShowString(0, 0, temp_ZFC, 16);
+    // printf("%d\n",stcAngle.Angle[0]*180/32768);
+    // HAL_Delay(100);
 
     // 步进电机调参
-    // if (stepperx_st >= 400)
+    // if (stepperx_st >= 1600)
     // {
-    //   stepper_move_speed(2, -20);
+    //   stepper_move_speed(x, -40);
     // }
-    // else if (stepperx_st <= -400)
+    // else if (stepperx_st <= -1600)
     // {
-    //   stepper_move_speed(2, 20);
+    //   stepper_move_speed(x, 40);
     // }
-    int temp1=100*sin(3.14*uwTick/1000);
-    int temp2=100*cos(3.14*uwTick/1000);
-    stepper_move_speed(x,(int)temp1);
-    stepper_move_speed(y,(int)temp2);
-    printf("%d,%d,%d,%d\n", steppery_st, stepperx_st, test_if1,test_if2);
 
+// float t = (HAL_GetTick() % 6283) / 1000.0f; // 6283约等于2π*1000
+// int temp1 = 40 * sin(t);//画圆
+// int temp2 = 40 * cos(t);//画圆
+//蓝牙速度控制
+//     stepper_move_speed(x,m1);//齿轮比为10：100
+//     stepper_move_speed(y,m2);//齿轮比为10：50（控速函数我的写法是同样的数值输入到speed函数中实际转速相同，可以用vofa试试速度（电脑密码989898））
+    // printf("%d,%d,%d,%d\n", steppery_st, stepperx_st,m1,m2);
+    // cam_receive();
+    // printf("%d,%d,%d,%d,%d,%d\n",rxprocess_buf[0],rxprocess_buf[1],rxprocess_buf[2],camera_use[0],camera_use[1],camera_use[2]);
+    // cam_process();         
   }
   /* USER CODE END 3 */
 }
@@ -259,6 +298,61 @@ float bytes_to_float(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3)
 {
   unsigned char data[] = {b0, b1, b2, b3};
   return *(float *)data;
+}
+
+//摄像头处理函数
+void cam_receive(void)
+{
+  // 在主循环中处理接收到的完整数据包
+  if (packet_ready)
+  {
+    packet_ready = 0;
+
+    // 验证数据包
+    uint32_t sum = 0;
+    for (int i = 0; i < 14; i++)
+    {
+      sum += carecieve_buf[i];
+    }
+    sum = sum & 0xff;
+
+    // // 显示调试信息
+    // OLED_ShowNum(0, 0, recieve_buf[0], 5, 16);
+    // OLED_ShowNum(0, 2, recieve_buf[1], 5, 16);
+    // OLED_ShowNum(0, 4, recieve_buf[2], 5, 16);
+    // OLED_ShowNum(0, 6, recieve_buf[3], 5, 16);
+    // OLED_ShowNum(64, 0, recieve_buf[4], 5, 16);
+    // OLED_ShowNum(64, 2, recieve_buf[5], 5, 16);
+    // OLED_ShowNum(64, 4, recieve_buf[14], 5, 16);
+    // OLED_ShowNum(64, 6, recieve_buf[15], 5, 16);
+
+    // 验证帧头、帧尾和校验和
+    if (carecieve_buf[0] == 0x6A && carecieve_buf[15] == 0x5A && carecieve_buf[14] == sum)
+    {
+      // 数据包有效，复制到处理缓冲区
+      memcpy(&rxprocess_buf[0], &carecieve_buf[1], 13);
+    }
+    else
+    {
+      // printf("Invalid packet: head=%02X, tail=%02X, checksum=%02X, calc=%02X\n",
+      //        carecieve_buf[0], carecieve_buf[15], carecieve_buf[14], (uint8_t)sum);
+    }
+
+      // printf("%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x\n",
+      //    carecieve_buf[0], carecieve_buf[1], carecieve_buf[2], carecieve_buf[3],
+      //    carecieve_buf[4], carecieve_buf[5], carecieve_buf[6], carecieve_buf[7],
+      //    carecieve_buf[8], carecieve_buf[9], carecieve_buf[10], carecieve_buf[11],
+      //    carecieve_buf[12], carecieve_buf[13], carecieve_buf[14], carecieve_buf[15], carecieve_buf[16]);
+      cam_process();
+        }
+}
+//视觉处理
+void cam_process(void){
+  camera_use[0]=(uint8_t)rxprocess_buf[0];
+  camera_use[1]=(int16_t)((uint8_t)rxprocess_buf[1])|(uint16_t)(rxprocess_buf[2]<<8);
+  camera_use[2]=(int16_t)((uint8_t)rxprocess_buf[3])|(uint16_t)(rxprocess_buf[4]<<8);  
+
+
 }
 /* USER CODE END 4 */
 

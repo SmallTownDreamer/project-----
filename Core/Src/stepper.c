@@ -43,7 +43,7 @@ void stepper_move_speed(stepper_num num, int speed) // 步进电机移动函数,
             HAL_GPIO_WritePin(GPIOG, GPIO_PIN_1, GPIO_PIN_SET); // dir1
         }
         // __HAL_TIM_SET_AUTORELOAD(&htim5, 350 - ABS(speed));
-         __HAL_TIM_SET_AUTORELOAD(&htim5, ABS((int)(10000/speed))); // 设置步进电机定时器自动重装载值
+         __HAL_TIM_SET_AUTORELOAD(&htim7, ABS((int)(20000/speed))); // 设置步进电机定时器自动重装载值
         if (speed == 0)
         {
             HAL_GPIO_WritePin(GPIOG, GPIO_PIN_2, GPIO_PIN_RESET); // step1
@@ -57,11 +57,11 @@ void stepper_move_speed(stepper_num num, int speed) // 步进电机移动函数,
         HAL_GPIO_WritePin(GPIOG, GPIO_PIN_3, GPIO_PIN_SET); // en2
         if (speed > 0)                                      // 顺时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4, GPIO_PIN_SET); // dir2
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4, GPIO_PIN_RESET); // dir2
         }
         else // 逆时针
         {
-            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4, GPIO_PIN_RESET); // dir2
+            HAL_GPIO_WritePin(GPIOG, GPIO_PIN_4,GPIO_PIN_SET); // dir2
         }
         // __HAL_TIM_SET_AUTORELOAD(&htim6, 350 - ABS(speed)); // 设置步进电机定时器自动重装载值
         __HAL_TIM_SET_AUTORELOAD(&htim6, ABS((int)(10000/speed)));
@@ -132,6 +132,28 @@ void stepper_move_step(stepper_num num, int steps) // 步进电机移动函数,n
         } while (Delay--);
     }
 }
+
+void stepper_goto_position(int x_target, int y_target)
+{
+    // 计算需要移动的步数
+    int dx = x_target - stepperx_st;
+    int dy = y_target - steppery_st;
+
+    // 控制X轴步进电机
+    if (dx != 0)
+    {
+        stepper_move_step(x, dx); // x轴移动dx步
+        stepperx_st = x_target;   // 更新当前位置
+    }
+
+    // 控制Y轴步进电机
+    if (dy != 0)
+    {
+        stepper_move_step(y, dy); // y轴移动dy步
+        steppery_st = y_target;   // 更新当前位置
+    }
+}
+
 
 // void stepper_move_spst(int num, int speed, int steps) // 步进电机移动函数，speed控制速度大小，step控制方向,num=1_pitch,step<0抬头,num=2_yaw,
 // {

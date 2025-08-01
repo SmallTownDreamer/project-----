@@ -49,3 +49,4 @@ project\main.o: ../Core/Inc/track.h
 project\main.o: ../Core/Inc/table.h
 project\main.o: ../Core/Inc/stepper.h
 project\main.o: D:\keil5\32\ARM\ARMCC\Bin\..\include\math.h
+project\main.o: D:\keil5\32\ARM\ARMCC\Bin\..\include\string.h

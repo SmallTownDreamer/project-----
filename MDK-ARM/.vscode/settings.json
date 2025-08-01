@@ -7,6 +7,7 @@
         "numeric": "c",
         "functional": "c",
         "jy901s.h": "c",
-        "oled.h": "c"
+        "oled.h": "c",
+        "cstdint": "c"
     }
 }

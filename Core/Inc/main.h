@@ -49,12 +49,23 @@ extern uint8_t TxCamera_buf[6];
 // 临时字符串
 extern uint8_t temp_ZFC[20];
 
+// 视觉接收数组
+extern uint8_t carecieve_buf[16],rxprocess_buf[20];
+
+
+//角加速度
+extern float Ax,Ay,Az;
+//角速度
+extern float Gx,Gy,Gz;
+//角度（自动解算）
+extern float Roll_x,Pitch_y,Yaw_z;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-void bluetooth_test(void);
 float bytes_to_float(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3);
+void cam_receive(void);
+void cam_process(void);
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -78,6 +89,8 @@ void Error_Handler(void);
 #define Gyroscope_SDA_GPIO_Port GPIOF
 #define Gyroscope_SCL_Pin GPIO_PIN_1
 #define Gyroscope_SCL_GPIO_Port GPIOF
+#define LASER_Pin GPIO_PIN_7
+#define LASER_GPIO_Port GPIOF
 #define adc_1_Pin GPIO_PIN_0
 #define adc_1_GPIO_Port GPIOA
 #define adc_2_Pin GPIO_PIN_1

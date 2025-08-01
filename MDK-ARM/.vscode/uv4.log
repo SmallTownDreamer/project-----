@@ -1,2 +1,4 @@
-Load "project\\project.axf" 
-Erase Done.Programming Done.Verify OK.Flash Load finished at 01:19:52
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\keil5\32\ARM\ARMCC\Bin'
+Build target 'project'
+"project\project.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:00

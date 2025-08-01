@@ -474,34 +474,45 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-// static unsigned char TxBuffer[256];
-// static unsigned char TxCounter=0;
-// static unsigned char count=0; 
 
-// void UART3_send_char(unsigned char data)
-// {
-// 	TxBuffer[count++] = data;   
-// }
-
-// void UART3_send_string(unsigned char *str)
-// {
-// 	while(*str)
-// 	{
-// 		if(*str=='\r')UART3_send_char(0x0d);
-// 			else if(*str=='\n')UART3_send_char(0x0a);
-// 				else UART3_send_char(*str);
-// 		str++;
-// 	}
-// }
-
+extern uint8_t uart_rx_byte;           // 单字节接收缓冲
+extern uint8_t rx_index;
+extern uint8_t packet_ready;
 uint8_t Rxdata;
 extern void uart3_read_data(unsigned char ucData);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if (huart->Instance==USART2)
-	{
-		HAL_UART_Receive_IT(&huart2,&Rxdata,1);
-		uart3_read_data(Rxdata);	//��������
-	}	
+  if (huart->Instance == USART3)
+  {
+    HAL_UART_Receive_IT(&huart3, &Rxdata, 1);
+    uart3_read_data(Rxdata);
+  }
+  if (huart->Instance == UART4)
+  {
+    static uint32_t last_rx_time = 0;
+    uint32_t current_time = HAL_GetTick();
+
+    // 如果超时或收到帧头，重新开始接收
+    if ((current_time - last_rx_time > 100) || (uart_rx_byte == 0x6A && rx_index != 0))
+    {
+      rx_index = 0;
+    }
+
+    // 存储接收的字节
+    carecieve_buf[rx_index] = uart_rx_byte;
+    rx_index++;
+    last_rx_time = current_time;
+
+    // 检查是否接收完一个完整数据包
+    if (rx_index >= 16)
+    {
+      packet_ready = 1; // 标记数据包准备就绪
+      rx_index = 0;     // 重置索引
+    }
+
+    // 继续接收下一个字节
+    HAL_UART_Receive_IT(&huart4, &uart_rx_byte, 1);
+  }
 }
+
 /* USER CODE END 1 */

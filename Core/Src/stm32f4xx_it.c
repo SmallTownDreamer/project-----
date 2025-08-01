@@ -83,7 +83,7 @@ volatile uint8_t data_ready = 0;   // 数据就绪标志
 uint8_t bt_state = 0;
 
 extern int cnt;
-int m1 = 20, m2;
+int m1 , m2;
 int cnt1, cnt2;
 uint8_t state1, state2;
 uint8_t turn1, turn2;
@@ -95,6 +95,8 @@ extern int steppery_speed; // 步进电机1速度
 extern int stepperx_speed; // 步进电机2速度
 extern int steppery_st;   // 步进电机1初始步数
 extern int stepperx_st;   // 步进电机2初始步数
+
+extern uint8_t test_if1,test_if2;
 
 /* USER CODE END EV */
 
@@ -376,7 +378,6 @@ void USART3_IRQHandler(void)
 /**
   * @brief This function handles TIM5 global interrupt.
   */
- extern uint8_t test_if1,test_if2;
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
@@ -384,35 +385,7 @@ void TIM5_IRQHandler(void)
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
-  test_if1++;
 
-
-
-    if (steppery_speed != 0)
-  {
-    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);}
-      if (steppery_speed != 0)
-  {
-    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
-
-    // 步进电机2计数
-    if (steppery_step > 0 || steppery_speed > 0)
-    {
-      steppery_st++; // 步进电机2初始步数增加
-    }
-    else if (steppery_step < 0 || steppery_speed < 0)
-    {
-      steppery_st--; // 步进电机2初始步数减少
-    }
-  }
-
-  // if (cnt <= ABS(steppery_speed))
-  // {
-  //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
-
-  // 步进电机步数限位
-  steppery_speed = (steppery_st >= 1620 || steppery_st <= -10730) ? 0
-                                                                    : steppery_speed; // 重置步进电机1速度
   // if (cnt <= ABS(stepperx_speed))
   // {
   //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_5); // 控制步进电机步进
@@ -532,7 +505,29 @@ void TIM7_IRQHandler(void)
   /* USER CODE END TIM7_IRQn 0 */
   HAL_TIM_IRQHandler(&htim7);
   /* USER CODE BEGIN TIM7_IRQn 1 */
+  test_if1++;
+  if (steppery_speed != 0)
+  {
+    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
 
+    // 步进电机2计数
+    if (steppery_step > 0 || steppery_speed > 0)
+    {
+      steppery_st++; // 步进电机2初始步数增加
+    }
+    else if (steppery_step < 0 || steppery_speed < 0)
+    {
+      steppery_st--; // 步进电机2初始步数减少
+    }
+  }
+
+  // if (cnt <= ABS(steppery_speed))
+  // {
+  //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2); // 控制步进电机步进
+
+  // 步进电机步数限位
+  steppery_speed = (steppery_st >= 1620 || steppery_st <= -10730) ? 0
+                                                                    : steppery_speed; // 重置步进电机1速度
   /* USER CODE END TIM7_IRQn 1 */
 }
 
