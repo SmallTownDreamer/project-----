@@ -35,6 +35,7 @@
 #include "stepper.h"
 #include "math.h"
 #include "string.h"
+#include "table.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -158,7 +159,8 @@ int main(void)
   // OLED_Clear();
   // OLED_ShowString(0, 0, "oled ready", 16);
 
-
+//看我！！
+//我把所有之前用12命名步进的地方变为了xy(见stepper.h)，包括后面的pid的传入参数也是xy注意一下
   //陀螺仪接收中断
   HAL_UART_Receive_IT(&huart3,&Rxdata,1);
   //下面while（1）里有一个测试的蓝牙发送代码取注释掉看看串口，（如果是好的）把while（1）上面的那个代码取注释掉看看定义试试

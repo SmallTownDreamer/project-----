@@ -1,4 +1,16 @@
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\keil5\32\ARM\ARMCC\Bin'
 Build target 'project'
-"project\project.axf" - 0 Error(s), 0 Warning(s).
-Build Time Elapsed:  00:00:00
+compiling main.c...
+compiling stepper.c...
+..\Core\Src\stepper.c(167): warning:  #257-D: const variable "Kp"  requires an initializer
+      const float Kp,Kd,Ki;
+..\Core\Src\stepper.c(167): warning:  #257-D: const variable "Kd"  requires an initializer
+      const float Kp,Kd,Ki;
+..\Core\Src\stepper.c(167): warning:  #257-D: const variable "Ki"  requires an initializer
+      const float Kp,Kd,Ki;
+..\Core\Src\stepper.c: 3 warnings, 0 errors
+linking...
+Program Size: Code=14332 RO-data=456 RW-data=156 ZI-data=3188  
+FromELF: creating hex file...
+"project\project.axf" - 0 Error(s), 3 Warning(s).
+Build Time Elapsed:  00:00:03

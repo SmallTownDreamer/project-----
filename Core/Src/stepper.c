@@ -154,6 +154,35 @@ void stepper_goto_position(int x_target, int y_target)
     }
 }
 
+int PIDUpdate(float target, float Act_Current, stepper_num motor_id) 
+{
+    // 为两个电机分别保存PID状态
+    static int Err_Last[3] = {0, 0}; // 上次误差
+    static int Err_Current[3] = {0, 0};
+    static int Act_Last[3] = {0, 0}; // 上次实际值
+    static int Output_sum[3] = {0, 0};
+    static int Out[3] = {0, 0};
+    static int Dif_Last[3] = {0, 0};
+    const float k_VSI=0, k_dif=1;
+    const float Kp,Kd,Ki;
+
+    Err_Last[motor_id] = Err_Current[motor_id];        // 保存上次误差
+    Act_Last[motor_id] = Act_Current;                  // 保存上次实际值
+    Err_Current[motor_id] = target - Act_Current;      // 计算当前误差
+
+    float C = 1 / (k_VSI * ABS(Err_Current[motor_id]) + 1); // 变速积分系数
+
+    int Dif_Pre = -Kd * (Act_Current - Act_Last[motor_id]);
+    int Dif_out = (1 - k_dif) * Dif_Last[motor_id] + k_dif * Dif_Pre;
+    Dif_Last[motor_id] = Dif_out;
+
+    Out[motor_id] = Kp * (Err_Current[motor_id] - Err_Last[motor_id]) + C * Ki * Err_Current[motor_id] + Dif_out;
+
+    Output_sum[motor_id] += Out[motor_id];
+    if(Output_sum[motor_id]>800){Output_sum[motor_id]=800;}
+    if(Output_sum[motor_id]<-800){Output_sum[motor_id]=-800;}
+    return Output_sum[motor_id];
+}
 
 // void stepper_move_spst(int num, int speed, int steps) // 步进电机移动函数，speed控制速度大小，step控制方向,num=1_pitch,step<0抬头,num=2_yaw,
 // {
