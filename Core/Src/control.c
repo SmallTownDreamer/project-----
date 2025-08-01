@@ -12,3 +12,10 @@ int ABS(int v)
         return -v;
     }
 }
+void LASER_ON(){
+    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_7,GPIO_PIN_SET);
+}
+void LASER_OFF(){
+    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_7,GPIO_PIN_RESET);
+
+    

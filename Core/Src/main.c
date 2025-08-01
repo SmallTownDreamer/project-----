@@ -80,6 +80,8 @@ float Roll_x, Pitch_y, Yaw_z;
 float Ax, Ay, Az;
 // 角速度
 float Gx, Gy, Gz;
+//模式选择
+uint8_t menu;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -168,7 +170,8 @@ int main(void)
   // 开启步进电机定时器中断
   HAL_TIM_Base_Start_IT(&htim6);
   HAL_TIM_Base_Start_IT(&htim7);
-
+  HAL_TIM_Base_Start_IT(&htim8);
+  
   // 步进电机初始化
   stepper_init(); // 步进电机初始化
 
@@ -188,10 +191,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_7,GPIO_PIN_SET);
-    HAL_Delay(1000);
-    HAL_GPIO_WritePin(GPIOF,GPIO_PIN_7,GPIO_PIN_RESET);
-    HAL_Delay(1000);
+    menu=mode_choose();
+		if(menu ==1){mode1();}
+		if(menu ==2){mode2();}
+		if(menu ==3){mode3();}
+
+
+
+    //激光测试
+    // LASER_ON();
+    // HAL_Delay(1000);
+    // LASER_OFF();
+    // HAL_Delay(1000);
+    
     //陀螺仪调试
     // sprintf((char *)temp_ZFC, "angle:%d   ", stcAngle.Angle[0]*180/32768 );
     // OLED_ShowString(0, 0, temp_ZFC, 16);
@@ -215,7 +227,7 @@ int main(void)
 //     stepper_move_speed(x,m1);//齿轮比为10：100
 //     stepper_move_speed(y,m2);//齿轮比为10：50（控速函数我的写法是同样的数值输入到speed函数中实际转速相同，可以用vofa试试速度（电脑密码989898））
     // printf("%d,%d,%d,%d\n", steppery_st, stepperx_st,m1,m2);
-    // cam_receive();
+    cam_receive();
     // printf("%d,%d,%d,%d,%d,%d\n",rxprocess_buf[0],rxprocess_buf[1],rxprocess_buf[2],camera_use[0],camera_use[1],camera_use[2]);
     // cam_process();         
   }

@@ -1,6 +1,7 @@
 #include "table.h"
 #include "main.h"
 #include "oled.h"
+
 // 按键1
 int key1()
 {
@@ -13,6 +14,10 @@ int key2()
 }
 // 按键3
 int key3()
+{
+    return (HAL_GPIO_ReadPin(key3_GPIO_Port, key3_Pin));
+}
+int key4()
 {
     return (HAL_GPIO_ReadPin(key3_GPIO_Port, key3_Pin));
 }
@@ -86,9 +91,14 @@ short mode_choose()
 }
 
 void mode1(){
-
-}
+    stepper_move_step();
+}//写死？
 void mode2(){
+
+
+
+
+
 
 }
 void mode3(){

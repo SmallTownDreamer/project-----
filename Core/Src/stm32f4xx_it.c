@@ -66,6 +66,7 @@ extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim7;
+extern TIM_HandleTypeDef htim8;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart4;
@@ -376,6 +377,20 @@ void USART3_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM8 update interrupt and TIM13 global interrupt.
+  */
+void TIM8_UP_TIM13_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 0 */
+
+  /* USER CODE END TIM8_UP_TIM13_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim8);
+  /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 1 */
+
+  /* USER CODE END TIM8_UP_TIM13_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM5 global interrupt.
   */
 void TIM5_IRQHandler(void)
@@ -386,20 +401,6 @@ void TIM5_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
 
-  // if (cnt <= ABS(stepperx_speed))
-  // {
-  //   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_5); // 控制步进电机步进
-
-  //   if (stepperx_step > 0 || stepperx_speed > 0)
-  //   {
-  //     stepper2_st++; // 步进电机2步数增加
-  //   }
-  //   else if (stepperx_step < 0 || stepperx_speed < 0)
-  //   {
-  //     stepper2_st--; // 步进电机2步数减少
-  //   }
-  // }
-  
   /* USER CODE END TIM5_IRQn 1 */
 }
 
@@ -480,7 +481,7 @@ void TIM6_DAC_IRQHandler(void)
 
   if (stepperx_speed != 0)
   {
-    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_5);
+    HAL_GPIO_TogglePin(Stepper_1_st2_GPIO_Port, Stepper_1_st2_Pin);
 
     // 步进电机2计数
     if (stepperx_step > 0 || stepperx_speed > 0)
@@ -508,7 +509,7 @@ void TIM7_IRQHandler(void)
   test_if1++;
   if (steppery_speed != 0)
   {
-    HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
+    HAL_GPIO_TogglePin(Stepper_1_st1_GPIO_Port, Stepper_1_st1_Pin);
 
     // 步进电机2计数
     if (steppery_step > 0 || steppery_speed > 0)

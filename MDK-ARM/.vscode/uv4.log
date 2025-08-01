@@ -1,16 +1,68 @@
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\keil5\32\ARM\ARMCC\Bin'
 Build target 'project'
-compiling main.c...
+assembling startup_stm32f407xx.s...
+compiling control.c...
+../Core/Inc/control.h(7): warning:  #1295-D: Deprecated declaration LASER_ON - give arg types
+  void LASER_ON();
+../Core/Inc/control.h(8): warning:  #1295-D: Deprecated declaration LASER_OFF - give arg types
+  void LASER_OFF();
+..\Core\Src\control.c(20): warning:  #1-D: last line of file ends without a newline
+  }
+..\Core\Src\control.c: 3 warnings, 0 errors
+compiling gpio.c...
+compiling tim.c...
 compiling stepper.c...
+../Core/Inc/control.h(7): warning:  #1295-D: Deprecated declaration LASER_ON - give arg types
+  void LASER_ON();
+../Core/Inc/control.h(8): warning:  #1295-D: Deprecated declaration LASER_OFF - give arg types
+  void LASER_OFF();
 ..\Core\Src\stepper.c(167): warning:  #257-D: const variable "Kp"  requires an initializer
       const float Kp,Kd,Ki;
 ..\Core\Src\stepper.c(167): warning:  #257-D: const variable "Kd"  requires an initializer
       const float Kp,Kd,Ki;
 ..\Core\Src\stepper.c(167): warning:  #257-D: const variable "Ki"  requires an initializer
       const float Kp,Kd,Ki;
-..\Core\Src\stepper.c: 3 warnings, 0 errors
+..\Core\Src\stepper.c: 5 warnings, 0 errors
+compiling table.c...
+..\Core\Src\table.c(94): warning:  #223-D: function "stepper_move_step" declared implicitly
+      stepper_move_step();
+..\Core\Src\table.c: 1 warning, 0 errors
+compiling dma.c...
+compiling adc.c...
+compiling main.c...
+../Core/Inc/control.h(7): warning:  #1295-D: Deprecated declaration LASER_ON - give arg types
+  void LASER_ON();
+../Core/Inc/control.h(8): warning:  #1295-D: Deprecated declaration LASER_OFF - give arg types
+  void LASER_OFF();
+../Core/Src/main.c: 2 warnings, 0 errors
+compiling oled.c...
+compiling track.c...
+compiling usart.c...
+compiling stm32f4xx_it.c...
+../Core/Inc/control.h(7): warning:  #1295-D: Deprecated declaration LASER_ON - give arg types
+  void LASER_ON();
+../Core/Inc/control.h(8): warning:  #1295-D: Deprecated declaration LASER_OFF - give arg types
+  void LASER_OFF();
+../Core/Src/stm32f4xx_it.c: 2 warnings, 0 errors
+compiling jy901s.c...
+..\Core\Src\jy901s.c(105): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		stepper_move_step(x, angle_difference(store_lastZ, store_nowZ) * 1.8 / 16);
+..\Core\Src\jy901s.c: 1 warning, 0 errors
+compiling i2c.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_hal_msp.c...
 linking...
-Program Size: Code=14332 RO-data=456 RW-data=156 ZI-data=3188  
-FromELF: creating hex file...
-"project\project.axf" - 0 Error(s), 3 Warning(s).
-Build Time Elapsed:  00:00:03
+project\project.axf: Error: L6200E: Symbol SystemInit multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+project\project.axf: Error: L6200E: Symbol __asm___18_system_stm32f4xx_c_5d646a67____REV16 multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+project\project.axf: Error: L6200E: Symbol __asm___18_system_stm32f4xx_c_5d646a67____REVSH multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+project\project.axf: Error: L6200E: Symbol __asm___18_system_stm32f4xx_c_5d646a67____RRX multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+project\project.axf: Error: L6200E: Symbol AHBPrescTable multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+project\project.axf: Error: L6200E: Symbol APBPrescTable multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+project\project.axf: Error: L6200E: Symbol SystemCoreClock multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+project\project.axf: Error: L6200E: Symbol SystemCoreClockUpdate multiply defined (by system_stm32f4xx_1.o and system_stm32f4xx.o).
+Not enough information to list image symbols.
+Not enough information to list load addresses in the image map.
+Finished: 2 information, 0 warning and 8 error messages.
+"project\project.axf" - 8 Error(s), 14 Warning(s).
+Target not created.
+Build Time Elapsed:  00:02:23

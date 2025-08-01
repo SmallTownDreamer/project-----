@@ -89,8 +89,6 @@ void Error_Handler(void);
 #define Gyroscope_SDA_GPIO_Port GPIOF
 #define Gyroscope_SCL_Pin GPIO_PIN_1
 #define Gyroscope_SCL_GPIO_Port GPIOF
-#define LASER_Pin GPIO_PIN_7
-#define LASER_GPIO_Port GPIOF
 #define adc_1_Pin GPIO_PIN_0
 #define adc_1_GPIO_Port GPIOA
 #define adc_2_Pin GPIO_PIN_1
@@ -157,10 +155,6 @@ void Error_Handler(void);
 #define Stepper_2_dir1_GPIO_Port GPIOG
 #define Stepper_2_st1_Pin GPIO_PIN_8
 #define Stepper_2_st1_GPIO_Port GPIOG
-#define motor_frontB_input1_Pin GPIO_PIN_6
-#define motor_frontB_input1_GPIO_Port GPIOC
-#define motor_frontB_input2_Pin GPIO_PIN_7
-#define motor_frontB_input2_GPIO_Port GPIOC
 #define Track_SDA_Pin GPIO_PIN_9
 #define Track_SDA_GPIO_Port GPIOC
 #define Track_SCL_Pin GPIO_PIN_8

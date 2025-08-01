@@ -161,8 +161,8 @@ int PIDUpdate(float target, float Act_Current, stepper_num motor_id)
     static int Err_Current[3] = {0, 0};
     static int Act_Last[3] = {0, 0}; // 上次实际值
     static int Output_sum[3] = {0, 0};
-    static int Out[3] = {0, 0};
-    static int Dif_Last[3] = {0, 0};
+    static int Out[3] = {0, 0,0};
+    static int Dif_Last[3] = {0, 0,0};
     const float k_VSI=0, k_dif=1;
     const float Kp,Kd,Ki;
 
