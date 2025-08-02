@@ -17,5 +17,5 @@ void LASER_ON(){
 }
 void LASER_OFF(){
     HAL_GPIO_WritePin(GPIOF,GPIO_PIN_7,GPIO_PIN_RESET);
-
+}
     

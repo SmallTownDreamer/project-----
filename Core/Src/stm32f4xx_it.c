@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <string.h> // 添加：用于memcpy
 #include "control.h"
+#include "stepper.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -320,27 +321,27 @@ void USART1_IRQHandler(void)
   case 0x04:
     stepperx_speed = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
-  // case 0x05:
-  //   target_V = (int)bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
-  //   break;
-  // case 0x06:
-  //   target_turn = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
-  //   break;
+  case 0x05:
+    Kp=(int)bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    break;
+  case 0x06:
+    Ki=bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    break;
   case 0x07:
     m1 = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x08:
     m2 = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
-  case 0x09:
-    turn1 = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+  // case 0x09:
+  //   Ki= bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x10:
     turn2 = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
-  // case 0x11:
-  //   Velocity_Kd = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
-  //   break;
+  case 0x11:
+    Kd = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    break;
   default:
     break;
   }
@@ -386,6 +387,9 @@ void TIM8_UP_TIM13_IRQHandler(void)
   /* USER CODE END TIM8_UP_TIM13_IRQn 0 */
   HAL_TIM_IRQHandler(&htim8);
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 1 */
+  // PIDUpdate();
+  // stepper_move_speed(y, steppery_speed);
+  // stepper_move_speed(x, stepperx_speed);
 
   /* USER CODE END TIM8_UP_TIM13_IRQn 1 */
 }
@@ -481,7 +485,7 @@ void TIM6_DAC_IRQHandler(void)
 
   if (stepperx_speed != 0)
   {
-    HAL_GPIO_TogglePin(Stepper_1_st2_GPIO_Port, Stepper_1_st2_Pin);
+    HAL_GPIO_TogglePin(Stepper_2_st2_GPIO_Port, Stepper_2_st2_Pin);
 
     // 步进电机2计数
     if (stepperx_step > 0 || stepperx_speed > 0)
@@ -509,16 +513,16 @@ void TIM7_IRQHandler(void)
   test_if1++;
   if (steppery_speed != 0)
   {
-    HAL_GPIO_TogglePin(Stepper_1_st1_GPIO_Port, Stepper_1_st1_Pin);
+    HAL_GPIO_TogglePin(Stepper_2_st1_GPIO_Port, Stepper_2_st1_Pin);
 
-    // 步进电机2计数
+    // 步进电机1计数
     if (steppery_step > 0 || steppery_speed > 0)
     {
-      steppery_st++; // 步进电机2初始步数增加
+      steppery_st++; // 步进电机1初始步数增加
     }
     else if (steppery_step < 0 || steppery_speed < 0)
     {
-      steppery_st--; // 步进电机2初始步数减少
+      steppery_st--; // 步进电机1初始步数减少
     }
   }
 
