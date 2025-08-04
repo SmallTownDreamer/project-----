@@ -89,21 +89,44 @@ extern int steppery_speed; // 步进电机1速度
 extern int stepperx_speed; // 步进电机2速度
 uint8_t pid_flag = 0;
 uint32_t nnn;
-/* USER CODE END PD */
 
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
+// 模式选择
+uint8_t current_mode = 0; // 当前选中的模式：0=未选，1=模式1，2=模式2
+// 子选项选择（仅模式1有效）
+uint8_t current_sub_option = 0; // 当前选中的子选项：0=未选，1=Yaw，2=Dir_y，3=Pitch
+// 子选项可选范围
+const uint8_t YAW_MIN = 1, YAW_MAX = 4;
+const uint8_t DIR_Y_MIN = 1, DIR_Y_MAX = 2;
+const uint8_t PITCH_MIN = 1, PITCH_MAX = 3;
+// 当前选中的选项的数值（由 state 控制）
+uint8_t state = 1; // 当前被选中选项的数值，比如 Yaw = 3
+// 是否正在运行
+uint8_t is_running = 0; // 0 = 停止，1 = 运行
+// 按键标志位（在中断里设置）
+extern volatile uint8_t key1_flag; // key1：state 减1
+extern volatile uint8_t key3_flag; // key3：state 加1
+extern volatile uint8_t key2_flag; // key2：开始/停止
+extern volatile uint8_t key4_flag; // key4：切换子选项 或 模式
+uint8_t Clamp(uint8_t value, uint8_t min, uint8_t max);
+uint8_t GetMinValue();
+uint8_t GetMaxValue();
+void Run_Current_Mode_Function();
 
-/* USER CODE END PM */
+    /* USER CODE END PD */
 
-/* Private variables ---------------------------------------------------------*/
+    /* Private macro -------------------------------------------------------------*/
+    /* USER CODE BEGIN PM */
 
-/* USER CODE BEGIN PV */
+    /* USER CODE END PM */
 
-/* USER CODE END PV */
+    /* Private variables ---------------------------------------------------------*/
 
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
+    /* USER CODE BEGIN PV */
+
+    /* USER CODE END PV */
+
+    /* Private function prototypes -----------------------------------------------*/
+    void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -196,6 +219,67 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+    // --------------------------
+    // 按键功能处理
+    // --------------------------
+
+    // key1：当前选项 state 减 1
+    if (key1_flag)
+    {
+      if (state > GetMinValue())
+        state--;
+      key1_flag = 0;
+    }
+
+    // key3：当前选项 state 加 1
+    if (key3_flag)
+    {
+      if (state < GetMaxValue())
+        state++;
+      key3_flag = 0;
+    }
+
+    // key2：切换 is_running 状态（启动/停止）
+    if (key2_flag)
+    {
+      is_running = !is_running;
+      key2_flag = 0;
+    }
+
+    // key4：切换子选项（Yaw/Dir_y/Pitch） 或 切换模式
+    if (key4_flag)
+    {
+      if (current_mode == 1)
+      {
+        // 模式1下：切换子选项 Yaw -> Dir_y -> Pitch -> Yaw...
+        current_sub_option++;
+        if (current_sub_option > 3)
+          current_sub_option = 1;
+      }
+      else
+      {
+        // 模式2 或其它模式下：可以切换模式，比如 current_mode = 1 / 2
+        current_mode++;
+        if (current_mode > 2)
+          current_mode = 1;
+      }
+      key4_flag = 0;
+    }
+
+    // --------------------------
+    // 当前选项范围限制
+    // --------------------------
+    state = Clamp(state, GetMinValue(), GetMaxValue());
+
+    // --------------------------
+    // 如果当前模式正在运行，执行功能
+    // --------------------------
+    if (is_running)
+    {
+      Run_Current_Mode_Function();
+    }
+
     cam_receive();
     if (!pid_flag)
     {
@@ -415,6 +499,72 @@ void cam_process(void)
   camera_use[3] = (int16_t)((uint8_t)rxprocess_buf[1]) | (uint16_t)(rxprocess_buf[6] << 8); // pitch
   camera_use[4] = (int16_t)((uint8_t)rxprocess_buf[3]) | (uint16_t)(rxprocess_buf[8] << 8); // yaw
 }
+
+// 模式选择相关函数
+uint8_t Clamp(uint8_t value, uint8_t min, uint8_t max) //  限制 value 在 [min, max] 范围内，超出则截断
+{
+  if (value < min)
+    return min;
+  if (value > max)
+    return max;
+  return value;
+}
+uint8_t GetMinValue()// 根据当前选中的子选项返回最小值
+{
+  switch (current_sub_option)
+  {
+  case 1:
+    return YAW_MIN; // Yaw: 1~4
+  case 2:
+    return DIR_Y_MIN; // Dir_y: 1~2
+  case 3:
+    return PITCH_MIN; // Pitch: 1~3
+  default:
+    return 1; // 默认最小值
+  }
+}
+uint8_t GetMaxValue()// 根据当前选中的子选项返回最大值
+{
+  switch (current_sub_option)
+  {
+  case 1:
+    return YAW_MAX; // Yaw: 1~4
+  case 2:
+    return DIR_Y_MAX; // Dir_y: 1~2
+  case 3:
+    return PITCH_MAX; // Pitch: 1~3
+  default:
+    return 1; // 默认最大值
+  }
+}
+void Run_Current_Mode_Function() //根据当前模式和选项执行功能
+{
+  if (current_mode == 1)
+  {
+    // 模式 1：根据当前选中的子选项执行对应功能
+    switch (current_sub_option)
+    {
+    case 1:
+      // 执行 Yaw 相关功能，比如控制电机角度、显示等
+      // 示例：printf("Mode 1 - Yaw: %d\n", state);
+      break;
+    case 2:
+      // 执行 Dir_y 相关功能
+      // printf("Mode 1 - Dir_y: %d\n", state);
+      break;
+    case 3:
+      // 执行 Pitch 相关功能
+      // printf("Mode 1 - Pitch: %d\n", state);
+      break;
+    }
+  }
+  else if (current_mode == 2)
+  {
+    // 模式 2：无子选项，执行模式2的功能
+    // printf("Mode 2 is running\n");
+  }
+}
+
 /* USER CODE END 4 */
 
 /**

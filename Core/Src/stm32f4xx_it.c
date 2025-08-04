@@ -78,14 +78,14 @@ extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
 // 双缓冲区解决方案
 extern uint8_t recieve_buf[5];
-uint8_t process_buf[5]; // 处理缓冲区
-volatile uint8_t data_ready = 0;   // 数据就绪标志
+uint8_t process_buf[5];          // 处理缓冲区
+volatile uint8_t data_ready = 0; // 数据就绪标志
 
 // 蓝牙测试状态量
 uint8_t bt_state = 0;
 
 extern int cnt;
-int m1 , m2;
+int m1, m2;
 int cnt1, cnt2;
 uint8_t state1, state2;
 uint8_t turn1, turn2;
@@ -95,10 +95,14 @@ extern int steppery_step;  // 步进电机1步数_外部
 extern int stepperx_step;  // 步进电机2步数_外部
 extern int steppery_speed; // 步进电机1速度
 extern int stepperx_speed; // 步进电机2速度
-extern int steppery_st;   // 步进电机1初始步数
-extern int stepperx_st;   // 步进电机2初始步数
+extern int steppery_st;    // 步进电机1初始步数
+extern int stepperx_st;    // 步进电机2初始步数
 
-extern uint8_t test_if1,test_if2;
+// 按键状态
+uint8_t key1_flag = 0, key2_flag = 0, key3_flag = 0, key4_flag = 0; // 按键标志变量
+
+//
+extern uint8_t test_if1, test_if2;
 
 /* USER CODE END EV */
 
@@ -106,8 +110,8 @@ extern uint8_t test_if1,test_if2;
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
-  * @brief This function handles Non maskable interrupt.
-  */
+ * @brief This function handles Non maskable interrupt.
+ */
 void NMI_Handler(void)
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
@@ -121,8 +125,8 @@ void NMI_Handler(void)
 }
 
 /**
-  * @brief This function handles Hard fault interrupt.
-  */
+ * @brief This function handles Hard fault interrupt.
+ */
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
@@ -136,8 +140,8 @@ void HardFault_Handler(void)
 }
 
 /**
-  * @brief This function handles Memory management fault.
-  */
+ * @brief This function handles Memory management fault.
+ */
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
@@ -151,8 +155,8 @@ void MemManage_Handler(void)
 }
 
 /**
-  * @brief This function handles Pre-fetch fault, memory access fault.
-  */
+ * @brief This function handles Pre-fetch fault, memory access fault.
+ */
 void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
@@ -166,8 +170,8 @@ void BusFault_Handler(void)
 }
 
 /**
-  * @brief This function handles Undefined instruction or illegal state.
-  */
+ * @brief This function handles Undefined instruction or illegal state.
+ */
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
@@ -181,8 +185,8 @@ void UsageFault_Handler(void)
 }
 
 /**
-  * @brief This function handles System service call via SWI instruction.
-  */
+ * @brief This function handles System service call via SWI instruction.
+ */
 void SVC_Handler(void)
 {
   /* USER CODE BEGIN SVCall_IRQn 0 */
@@ -194,8 +198,8 @@ void SVC_Handler(void)
 }
 
 /**
-  * @brief This function handles Debug monitor.
-  */
+ * @brief This function handles Debug monitor.
+ */
 void DebugMon_Handler(void)
 {
   /* USER CODE BEGIN DebugMonitor_IRQn 0 */
@@ -207,8 +211,8 @@ void DebugMon_Handler(void)
 }
 
 /**
-  * @brief This function handles Pendable request for system service.
-  */
+ * @brief This function handles Pendable request for system service.
+ */
 void PendSV_Handler(void)
 {
   /* USER CODE BEGIN PendSV_IRQn 0 */
@@ -220,8 +224,8 @@ void PendSV_Handler(void)
 }
 
 /**
-  * @brief This function handles System tick timer.
-  */
+ * @brief This function handles System tick timer.
+ */
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
@@ -241,8 +245,8 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
-  */
+ * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
+ */
 void TIM1_UP_TIM10_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 0 */
@@ -255,8 +259,8 @@ void TIM1_UP_TIM10_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM2 global interrupt.
-  */
+ * @brief This function handles TIM2 global interrupt.
+ */
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
@@ -269,8 +273,8 @@ void TIM2_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM3 global interrupt.
-  */
+ * @brief This function handles TIM3 global interrupt.
+ */
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
@@ -283,8 +287,8 @@ void TIM3_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM4 global interrupt.
-  */
+ * @brief This function handles TIM4 global interrupt.
+ */
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
@@ -297,8 +301,8 @@ void TIM4_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USART1 global interrupt.
-  */
+ * @brief This function handles USART1 global interrupt.
+ */
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
@@ -322,10 +326,10 @@ void USART1_IRQHandler(void)
     stepperx_speed = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x05:
-    Kp=(int)bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    Kp = (int)bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x06:
-    Ki=bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    Ki = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x07:
     m1 = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
@@ -333,8 +337,8 @@ void USART1_IRQHandler(void)
   case 0x08:
     m2 = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
-  // case 0x09:
-  //   Ki= bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
+    // case 0x09:
+    //   Ki= bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
     break;
   case 0x10:
     turn2 = bytes_to_float(recieve_buf[1], recieve_buf[2], recieve_buf[3], recieve_buf[4]);
@@ -350,8 +354,8 @@ void USART1_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USART2 global interrupt.
-  */
+ * @brief This function handles USART2 global interrupt.
+ */
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
@@ -364,8 +368,8 @@ void USART2_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USART3 global interrupt.
-  */
+ * @brief This function handles USART3 global interrupt.
+ */
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
@@ -378,8 +382,8 @@ void USART3_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM8 update interrupt and TIM13 global interrupt.
-  */
+ * @brief This function handles TIM8 update interrupt and TIM13 global interrupt.
+ */
 void TIM8_UP_TIM13_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 0 */
@@ -395,8 +399,8 @@ void TIM8_UP_TIM13_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM5 global interrupt.
-  */
+ * @brief This function handles TIM5 global interrupt.
+ */
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
@@ -405,12 +409,58 @@ void TIM5_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
 
-  /* USER CODE END TIM5_IRQn 1 */
+  cnt1++;
+  if (cnt1 >= 50)
+  {
+    cnt1 = 0;
+
+    // key1c = (HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_12) == GPIO_PIN_RESET) ? 1 : 0;
+    // if (key1p == 1 && key1c == 0)
+    // {
+    //   key1_flag++;
+    // }
+    // key1p = key1c;
+
+    // 检测 key1（假设是 GPIOG PIN 12，按下为低电平）
+    static uint8_t key1_prev = 1;
+    uint8_t key1_curr = (HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_12) == GPIO_PIN_RESET) ? 0 : 1;
+    if (key1_prev == 1 && key1_curr == 0)
+    {                // 检测下降沿：按下动作
+      key1_flag = 1; // 设置按键1按下标志
+    }
+    key1_prev = key1_curr;
+    // key3
+    static uint8_t key3_prev = 1;
+    uint8_t key3_curr = (HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_14) == GPIO_PIN_RESET) ? 0 : 1;
+    if (key3_prev == 1 && key3_curr == 0)
+    {
+      key3_flag = 1;
+    }
+    key3_prev = key3_curr;
+    // key4
+    static uint8_t key4_prev = 1;
+    uint8_t key4_curr = (HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_15) == GPIO_PIN_RESET) ? 0 : 1;
+    if (key4_prev == 1 && key4_curr == 0)
+    {
+      key4_flag = 1;
+    }
+    key4_prev = key4_curr;
+    //  key2
+    static uint8_t key2_prev = 1;
+    uint8_t key2_curr = (HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_12) == GPIO_PIN_RESET) ? 0 : 1;
+    if (key2_prev == 1 && key2_curr == 0)
+    {
+      key2_flag = 1;
+    }
+    key2_prev = key2_curr;
+
+    /* USER CODE END TIM5_IRQn 1 */
+  }
 }
 
 /**
-  * @brief This function handles UART4 global interrupt.
-  */
+ * @brief This function handles UART4 global interrupt.
+ */
 void UART4_IRQHandler(void)
 {
   /* USER CODE BEGIN UART4_IRQn 0 */
@@ -458,8 +508,8 @@ void UART4_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles UART5 global interrupt.
-  */
+ * @brief This function handles UART5 global interrupt.
+ */
 void UART5_IRQHandler(void)
 {
   /* USER CODE BEGIN UART5_IRQn 0 */
@@ -472,8 +522,8 @@ void UART5_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts.
-  */
+ * @brief This function handles TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts.
+ */
 void TIM6_DAC_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
@@ -501,8 +551,8 @@ void TIM6_DAC_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM7 global interrupt.
-  */
+ * @brief This function handles TIM7 global interrupt.
+ */
 void TIM7_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM7_IRQn 0 */
@@ -532,13 +582,13 @@ void TIM7_IRQHandler(void)
 
   // 步进电机步数限位
   steppery_speed = (steppery_st >= 1620 || steppery_st <= -10730) ? 0
-                                                                    : steppery_speed; // 重置步进电机1速度
+                                                                  : steppery_speed; // 重置步进电机1速度
   /* USER CODE END TIM7_IRQn 1 */
 }
 
 /**
-  * @brief This function handles DMA2 stream2 global interrupt.
-  */
+ * @brief This function handles DMA2 stream2 global interrupt.
+ */
 void DMA2_Stream2_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
@@ -551,8 +601,8 @@ void DMA2_Stream2_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles DMA2 stream7 global interrupt.
-  */
+ * @brief This function handles DMA2 stream7 global interrupt.
+ */
 void DMA2_Stream7_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream7_IRQn 0 */
