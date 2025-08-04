@@ -19,7 +19,7 @@ int key3()
 }
 int key4()
 {
-    return (HAL_GPIO_ReadPin(key3_GPIO_Port, key3_Pin));
+    return (HAL_GPIO_ReadPin(key4_GPIO_Port, key4_Pin));
 }
 
 // 判断按键按下（阻塞式，待改）

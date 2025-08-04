@@ -58,7 +58,9 @@ extern float Ax,Ay,Az;
 //角速度
 extern float Gx,Gy,Gz;
 //角度（自动解算）
-extern float Roll_x,Pitch_y,Yaw_z;
+extern float Roll_x, Pitch_y, Yaw_z;
+extern float Kp, Kd, Ki;
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
